@@ -158,6 +158,23 @@ alter table `transaction_detail`
 alter table `transaction_information`
   add constraint `ti_ibfk_1` foreign key (`customerid`) references `customer_information` (`customerid`);
 
-/*!40101 set character_set_client=@old_character_set_client */;
-/*!40101 set character_set_results=@old_character_set_results */;
-/*!40101 set collation_connection=@old_collation_connection */;
+DESC category;
+DESC customer_information;
+DESC depleted_product;
+DESC payment;
+DESC price_list;
+DESC product;
+DESC supplier_information;
+DESC transaction_detail;
+DESC transaction_information;
+
+SELECT * FROM category;
+SELECT * FROM customer_information;
+SELECT * FROM depleted_product;
+SELECT * FROM payment;
+SELECT * FROM price_list;
+SELECT * FROM product;
+SELECT * FROM supplier_information;
+SELECT * FROM transaction_detail;
+SELECT * FROM transaction_information;
+

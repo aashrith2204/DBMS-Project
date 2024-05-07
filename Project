@@ -1,0 +1,163 @@
+
+create table `category` (
+  `categoryid` int(11) not null,
+  `categoryname` varchar(30) not null
+) engine=innodb default charset=latin1;
+
+insert into `category` (`categoryid`, `categoryname`) values
+(1, 'washing powder'),
+(2, 'cosmetics'),
+(3, 'stationary'),
+(4, 'garments');
+
+create table `customer_information` (
+  `customerid` varchar(30) not null,
+  `name` varchar(30) not null,
+  `address` varchar(50) not null,
+  `phone` varchar(15) not null,
+  `password` varchar(15) not null
+) engine=innodb default charset=latin1;
+
+insert into `customer_information` (`customerid`, `name`, `address`, `phone`, `password`) values
+('c11', 'avijit verma', 'xyz', '7901012908', 'abc123'),
+('c12', 'swargam avinash', 'abc', '7901012908', 'qwerty'),
+('c13', 'pranavendra', 'xwr', '7077102278', 'asdfgh');
+
+create table `depleted_product` (
+  `productid` int(11) not null,
+  `quantity` int(11) not null
+) engine=innodb default charset=latin1;
+
+create table `payment` (
+  `transactionid` int(11) not null,
+  `amount_paid` int(11) not null,
+  `mode` varchar(30) not null,
+  `transaction_date` int(11) not null
+) engine=innodb default charset=latin1;
+
+insert into `payment` (`transactionid`, `amount_paid`, `mode`, `transaction_date`) values
+(22, 4400, 'debit card', 2016),
+(25, 4100, 'cash', 2016),
+(27, 4500, 'cash', 2016),
+(28, 1500, 'debit card', 2016);
+
+create table `price_list` (
+  `productid` int(11) not null,
+  `usp` int(11) not null
+) engine=innodb default charset=latin1;
+
+insert into `price_list` (`productid`, `usp`) values
+(1, 70),
+(2, 100),
+(3, 55),
+(4, 150),
+(5, 300);
+
+create table `product` (
+  `productid` int(11) not null,
+  `pname` varchar(30) not null,
+  `categoryid` int(11) not null,
+  `supplierid` int(11) not null,
+  `quantity_in_stock` int(11) not null,
+  `unitprice` int(11) not null,
+  `reorderlevel` int(11) not null
+) engine=innodb default charset=latin1;
+
+insert into `product` (`productid`, `pname`, `categoryid`, `supplierid`, `quantity_in_stock`, `unitprice`, `reorderlevel`) values
+(1, 'nirma', 1, 1, 20, 60, 10),
+(2, 'surf', 1, 1, 55, 70, 10),
+(3, 'pond powder', 2, 2, 35, 40, 10),
+(4, 'garnier cream', 2, 2, 55, 110, 8),
+(5, 'parker pen', 3, 2, 100, 250, 10);
+
+create table `supplier_information` (
+  `supplierid` int(11) not null,
+  `sname` varchar(30) not null,
+  `address` varchar(50) not null,
+  `phone` varchar(15) not null
+) engine=innodb default charset=latin1;
+
+
+insert into `supplier_information` (`supplierid`, `sname`, `address`, `phone`) values
+(1, 'swargam', 'xyz', '123456789'),
+(2, 'sena', 'qwe', '987654329 ');
+
+create table `transaction_detail` (
+  `transactionid` int(11) not null,
+  `productid` int(11) not null,
+  `quantity` int(11) not null,
+  `discount` int(11) not null default '0',
+  `total_amount` int(11) not null,
+  `trans_init_date` date not null
+) engine=innodb default charset=latin1;
+
+insert into `transaction_detail` (`transactionid`, `productid`, `quantity`, `discount`, `total_amount`, `trans_init_date`) values
+(22, 1, 20, 0, 1400, '2016-11-17'),
+(22, 2, 30, 0, 3000, '2016-11-17'),
+(25, 3, 20, 0, 1100, '2016-11-17'),
+(25, 4, 20, 0, 3000, '2016-11-17'),
+(27, 1, 20, 0, 1400, '2016-11-15'),
+(27, 2, 20, 0, 2000, '2016-11-15'),
+(27, 3, 20, 0, 1100, '2016-11-15'),
+(28, 4, 10, 0, 1500, '2016-11-16');
+
+create table `transaction_information` (
+  `transactionid` int(11) not null,
+  `customerid` varchar(30) not null,
+  `trans_init_date` date not null
+) engine=innodb default charset=latin1;
+
+insert into `transaction_information` (`transactionid`, `customerid`, `trans_init_date`) values
+(22, 'c12', '2016-11-17'),
+(25, 'c11', '2016-11-17'),
+(27, 'c13', '2016-11-15'),
+(28, 'c13', '2016-11-16');
+
+alter table `category`
+  add primary key (`categoryid`);
+
+alter table `customer_information`
+  add primary key (`customerid`);
+
+alter table `depleted_product`
+  add primary key (`productid`);
+
+alter table `payment`
+  add primary key (`transactionid`);
+
+alter table `price_list`
+  add primary key (`productid`);
+
+alter table `product`
+  add primary key (`productid`),
+  add key `product_ibfk_2` (`categoryid`),
+  add key `product_ibfk_3` (`supplierid`);
+
+alter table `supplier_information`
+  add primary key (`supplierid`);
+
+alter table `transaction_detail`
+  add primary key (`transactionid`,`productid`),
+  add key `td_ibfk_2` (`productid`);
+
+alter table `transaction_information`
+  add primary key (`transactionid`),
+  add key `ti_ibfk_1` (`customerid`);
+
+
+alter table `transaction_information`
+  modify `transactionid` int(11) not null auto_increment, auto_increment=29;
+
+alter table `product`
+  add constraint `product_ibfk_2` foreign key (`categoryid`) references `category` (`categoryid`),
+  add constraint `product_ibfk_3` foreign key (`supplierid`) references `supplier_information` (`supplierid`);
+
+alter table `transaction_detail`
+  add constraint `td_ibfk_2` foreign key (`productid`) references `product` (`productid`);
+
+alter table `transaction_information`
+  add constraint `ti_ibfk_1` foreign key (`customerid`) references `customer_information` (`customerid`);
+
+/*!40101 set character_set_client=@old_character_set_client */;
+/*!40101 set character_set_results=@old_character_set_results */;
+/*!40101 set collation_connection=@old_collation_connection */;
